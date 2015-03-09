@@ -1,5 +1,7 @@
 <h1>Simple Twitter Client</h1>
 
+<p>Time taken:  10 hours</p>
+
 <p>The following stories have been implemented</p>
 
 <ul>
