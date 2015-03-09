@@ -21,7 +21,7 @@
         android:layout_toEndOf="@+id/ivProfileImage"
         android:layout_toRightOf="@+id/ivProfileImage"
         android:textColor="@android:color/black"
-        android:layout_marginLeft="10dp"
+        android:paddingLeft="10dp"
         android:text="Billy" />
 
     <TextView
@@ -33,7 +33,7 @@
         android:layout_alignBottom="@+id/ivProfileImage"
         android:layout_alignLeft="@+id/tvUsername"
         android:layout_alignStart="@+id/tvUsername"
-        android:layout_marginLeft="10dp"
+        android:paddingLeft="10dp"
         />
 
     <EditText
@@ -48,6 +48,8 @@
         android:layout_marginTop="10dp"
         android:layout_below="@+id/ivProfileImage"
         android:gravity="top"
-        android:hint="What&apos;s happening?" />
+        android:hint="What&apos;s happening?"
+        android:maxLength="140"
+       />
 
 </RelativeLayout>

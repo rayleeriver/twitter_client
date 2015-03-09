@@ -3,7 +3,7 @@ package com.codepath.apps.mysimpletweets.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,10 +11,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import com.codepath.apps.mysimpletweets.ComposeDialogFragment;
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.adapters.EndlessScrollListener;
 import com.codepath.apps.mysimpletweets.adapters.TweetsArrayAdapter;
@@ -31,9 +31,12 @@ import org.json.JSONObject;
 public class TimelineActivity extends ActionBarActivity {
 
     private TwitterClient client;
-    private TweetsArrayAdapter aTweets;
+    private TweetsArrayAdapter tweetsAdapter;
     private ArrayList<Tweet> tweets;
+
     private ListView lvTweets;
+    private SwipeRefreshLayout swipeContainer;
+
     private User currentUser;
     public static final int REQUEST_CODE=2000;
 
@@ -42,10 +45,18 @@ public class TimelineActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        lvTweets = (ListView) findViewById(R.id.lvTweets);
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                populateTimeline();
+            }
+        });
+
         tweets = new ArrayList<Tweet>();
-        aTweets = new TweetsArrayAdapter(this, tweets);
-        lvTweets.setAdapter(aTweets);
+        tweetsAdapter = new TweetsArrayAdapter(this, tweets);
+        lvTweets = (ListView) findViewById(R.id.lvTweets);
+        lvTweets.setAdapter(tweetsAdapter);
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
 
             @Override
@@ -65,6 +76,8 @@ public class TimelineActivity extends ActionBarActivity {
     // send an api request to get the timeline json
     // fill the listiew by creating the tweet objects from json
     private void populateTimeline() {
+        Tweet.lastLowestId = Long.MAX_VALUE;
+
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
@@ -72,12 +85,16 @@ public class TimelineActivity extends ActionBarActivity {
                 // 1. deserialize json,
                 // 2. create models, add them to the adapter
                 // 3. load the model data into the listview
-                aTweets.addAll(Tweet.fromJsonArray(json));
+                tweetsAdapter.clear();
+                tweetsAdapter.addAll(Tweet.fromJsonArray(json));
+                swipeContainer.setRefreshing(false);
+
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("debug", errorResponse.toString());
+                Toast.makeText(TimelineActivity.this, errorResponse.toString(), Toast.LENGTH_LONG).show();
+                swipeContainer.setRefreshing(false);
             }
         });
     }
@@ -133,7 +150,6 @@ public class TimelineActivity extends ActionBarActivity {
             if (data != null) {
                 boolean success = data.getBooleanExtra("success", false);
                 if (success) {
-                    aTweets.clear();
                     populateTimeline();
                 }
             }

@@ -55,7 +55,12 @@
         </activity>
         <activity
             android:name=".activities.ComposeActivity"
-            android:label="@string/title_activity_compose" >
+            android:label="@string/title_activity_compose"
+            android:parentActivityName=".activities.TimelineActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.TimelineActivity" />>
         </activity>
     </application>
 

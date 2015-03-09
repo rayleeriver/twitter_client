@@ -1,5 +1,6 @@
 package com.codepath.apps.mysimpletweets.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -7,9 +8,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +34,9 @@ public class ComposeActivity extends ActionBarActivity {
     private TwitterClient client;
     private User currentUser;
     private EditText etBody;
+    private TextView tvCharsLeft;
+
+    private final static int MAX_TWEET_CHARS = 140;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +48,44 @@ public class ComposeActivity extends ActionBarActivity {
         TextView tvUsername = (TextView) findViewById(R.id.tvUsername);
         TextView tvScreenName = (TextView) findViewById(R.id.tvScreenName);
         etBody = (EditText) findViewById(R.id.etBody);
+        etBody.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                tvCharsLeft.setText(String.valueOf(MAX_TWEET_CHARS - s.length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         Picasso.with(this).load(currentUser.getProfileImageUrl()).into(ivProfileImage);
         tvUsername.setText(currentUser.getName());
         tvScreenName.setText("@" + currentUser.getScreenName());
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable((Color.parseColor("#994099FF"))));
+        setupActionBar();
 
         client = TwitterApplication.getRestClient();  // singleton client
+    }
+
+    private void setupActionBar() {
+        LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.actionbar_compose, null);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable((Color.parseColor("#994099FF"))));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setIcon(R.drawable.ic_launcher);
+        actionBar.setCustomView(v);
+
+        tvCharsLeft = (TextView) findViewById(R.id.tvCharsLeft);
     }
 
 
