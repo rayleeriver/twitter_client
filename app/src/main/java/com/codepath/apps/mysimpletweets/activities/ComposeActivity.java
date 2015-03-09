@@ -78,11 +78,10 @@ public class ComposeActivity extends ActionBarActivity {
         LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflator.inflate(R.layout.actionbar_compose, null);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable((Color.parseColor("#994099FF"))));
+        actionBar.setBackgroundDrawable(new ColorDrawable((Color.parseColor("#55acee"))));
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setIcon(R.drawable.ic_launcher);
+        actionBar.setIcon(R.drawable.ic_tweeter);
         actionBar.setCustomView(v);
 
         tvCharsLeft = (TextView) findViewById(R.id.tvCharsLeft);

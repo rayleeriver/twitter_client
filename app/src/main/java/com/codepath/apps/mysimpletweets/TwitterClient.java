@@ -46,7 +46,7 @@ public class TwitterClient extends OAuthBaseClient {
     public void getHomeTimeline(AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
-        params.put("count", 25);
+        params.put("count", 10);
         if (Tweet.lastLowestId != Long.MAX_VALUE) {
             params.put("max_id", Tweet.lastLowestId);
         }

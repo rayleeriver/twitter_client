@@ -3,6 +3,7 @@ package com.codepath.apps.mysimpletweets.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -39,7 +40,7 @@ public class TimelineActivity extends ActionBarActivity {
     private SwipeRefreshLayout swipeContainer;
 
     private User currentUser;
-    public static final int REQUEST_CODE=2000;
+    public static final int REQUEST_CODE = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +59,9 @@ public class TimelineActivity extends ActionBarActivity {
         tweetsAdapter = new TweetsArrayAdapter(this, tweets);
         lvTweets = (ListView) findViewById(R.id.lvTweets);
         lvTweets.setAdapter(tweetsAdapter);
-        lvTweets.setOnScrollListener(new EndlessScrollListener() {
+        tweetsAdapter.clear();
 
+        lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 populateTimeline();
@@ -71,7 +73,9 @@ public class TimelineActivity extends ActionBarActivity {
         populateTimeline();
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable((Color.parseColor("#994099FF"))));
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setIcon(R.drawable.ic_tweeter);
+        actionBar.setBackgroundDrawable(new ColorDrawable((Color.parseColor("#55acee"))));
     }
 
     // send an api request to get the timeline json
@@ -86,7 +90,6 @@ public class TimelineActivity extends ActionBarActivity {
                 // 1. deserialize json,
                 // 2. create models, add them to the adapter
                 // 3. load the model data into the listview
-                tweetsAdapter.clear();
                 tweetsAdapter.addAll(Tweet.fromJsonArray(json));
                 swipeContainer.setRefreshing(false);
 
@@ -122,7 +125,6 @@ public class TimelineActivity extends ActionBarActivity {
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,6 +167,7 @@ public class TimelineActivity extends ActionBarActivity {
             if (data != null) {
                 boolean success = data.getBooleanExtra("success", false);
                 if (success) {
+                    tweetsAdapter.clear();
                     populateTimeline();
                 }
             }
