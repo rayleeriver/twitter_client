@@ -1,6 +1,7 @@
 <h1>Simple Twitter Client</h1>
 
 <p>Time taken:  10 hours</p>
+<p>Licecap video in file <a href="https://github.com/rayleeriver/twitter_client/blob/master/submission_w3.gif">submission_w3.gif</a></p>
 
 <p>The following stories have been implemented</p>
 
