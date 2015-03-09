@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.codepath.apps.mysimpletweets.R;
@@ -93,7 +94,13 @@ public class TimelineActivity extends ActionBarActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Toast.makeText(TimelineActivity.this, errorResponse.toString(), Toast.LENGTH_LONG).show();
+                if (throwable instanceof IOException) {
+                    // network error, load from local DB
+                    tweetsAdapter.clear();
+                    tweetsAdapter.addAll(Tweet.getAll());
+                } else {
+                    Toast.makeText(TimelineActivity.this, errorResponse.toString(), Toast.LENGTH_LONG).show();
+                }
                 swipeContainer.setRefreshing(false);
             }
         });
@@ -108,7 +115,10 @@ public class TimelineActivity extends ActionBarActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("debug", errorResponse.toString());
+                if (throwable instanceof IOException) {
+                } else {
+                    Log.d("debug", errorResponse.toString());
+                }
             }
         });
     }
@@ -130,8 +140,13 @@ public class TimelineActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_compose) {
-            showComposeDialog();
-            return true;
+            if (currentUser != null) {
+                showComposeDialog();
+                return true;
+            } else {
+                Toast.makeText(this, "Can't detect current user, network issue?", Toast.LENGTH_LONG).show();
+                return false;
+            }
         }
 
         return super.onOptionsItemSelected(item);

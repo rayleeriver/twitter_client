@@ -3,14 +3,31 @@ package com.codepath.apps.mysimpletweets.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User implements Parcelable {
-    private String name;
+@Table(name="users")
+public class User extends Model implements Parcelable {
+
+    @Column(name="uid", unique=true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long uid;
+
+    @Column(name="name")
+    private String name;
+
+    @Column(name="screenName")
     private String screenName;
+
+    @Column(name="profileImageUrl")
     private String profileImageUrl;
+
+    public User() {
+        super();
+    }
 
     public static User fromJson(JSONObject json) {
         User user = new User();
@@ -20,6 +37,7 @@ public class User implements Parcelable {
             user.uid = json.getLong("id");
             user.screenName = json.getString("screen_name");
             user.profileImageUrl = json.getString("profile_image_url");
+            user.save();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -68,8 +86,6 @@ public class User implements Parcelable {
             return new User[size];
         }
     };
-
-    private User() {}
 
     private User(Parcel in) {
         name = in.readString();

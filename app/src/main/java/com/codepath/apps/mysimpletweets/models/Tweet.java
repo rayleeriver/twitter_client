@@ -2,6 +2,11 @@ package com.codepath.apps.mysimpletweets.models;
 
 import android.text.format.DateUtils;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,15 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Tweet {
+@Table(name = "tweets")
+public class Tweet extends Model {
     // list out the attributes
 
     public static long lastLowestId = Long.MAX_VALUE;
-    private String body;
+
+    @Column(name="uid", unique=true, onUniqueConflict = Column.ConflictAction.REPLACE )
     private long uid;  // tweet's id
-    private String createdAt;
+
+    @Column(name="user", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private User user;
+
+    @Column(name="body")
+    private String body;
+
+    @Column(name="createdAt")
+    private String createdAt;
+
     private String createdAtTimeSpan;
+
+    public Tweet() {
+        super();
+    }
 
     // parse json and store the data
     public static Tweet fromJson(JSONObject json) {
@@ -36,6 +55,7 @@ public class Tweet {
             }
             tweet.createdAt = json.getString("created_at");
             tweet.user = User.fromJson(json.getJSONObject("user"));
+            tweet.save();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -107,4 +127,11 @@ public class Tweet {
 
         return relativeDate;
     }
+
+    public static List<Tweet> getAll() {
+        return new Select()
+                .from(Tweet.class)
+                .execute();
+    }
+
 }
