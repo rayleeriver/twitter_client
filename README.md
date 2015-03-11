@@ -3,6 +3,16 @@
 <p>Time taken:  10 hours</p>
 <p>Licecap video in file <a href="https://github.com/rayleeriver/twitter_client/blob/master/submission_w3.gif">submission_w3.gif</a></p>
 
+<p>Todos</p>
+<ul>
+<li>Remove extra space on the left Actionbar Home icon</li>
+<li>Move DB operations to background task (e.g. user.save() to AsyncTask)</li>
+<li>Use LRUCache for loaded images and further persiste to Localstorage</li>
+<ul>
+<li>Further read images from Cache if possible</li>
+</ul>
+</ul>
+
 <p>The following stories have been implemented</p>
 
 <ul>
