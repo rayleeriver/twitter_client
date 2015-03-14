@@ -1,4 +1,4 @@
-package com.codepath.apps.mysimpletweets;
+package com.swpbiz.mysimpletweets;
 
 import android.content.Context;
 

@@ -1,6 +1,5 @@
-package com.codepath.apps.mysimpletweets.adapters;
+package com.swpbiz.mysimpletweets.adapters;
 
-import android.util.Log;
 import android.widget.AbsListView;
 
 public abstract class EndlessScrollListener implements AbsListView.OnScrollListener {

@@ -1,9 +1,8 @@
-package com.codepath.apps.mysimpletweets.activities;
+package com.swpbiz.mysimpletweets.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -17,13 +16,13 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.codepath.apps.mysimpletweets.R;
-import com.codepath.apps.mysimpletweets.adapters.EndlessScrollListener;
-import com.codepath.apps.mysimpletweets.adapters.TweetsArrayAdapter;
-import com.codepath.apps.mysimpletweets.TwitterApplication;
-import com.codepath.apps.mysimpletweets.TwitterClient;
-import com.codepath.apps.mysimpletweets.models.Tweet;
-import com.codepath.apps.mysimpletweets.models.User;
+import com.swpbiz.mysimpletweets.R;
+import com.swpbiz.mysimpletweets.adapters.EndlessScrollListener;
+import com.swpbiz.mysimpletweets.adapters.TweetsArrayAdapter;
+import com.swpbiz.mysimpletweets.TwitterApplication;
+import com.swpbiz.mysimpletweets.TwitterClient;
+import com.swpbiz.mysimpletweets.models.Tweet;
+import com.swpbiz.mysimpletweets.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;

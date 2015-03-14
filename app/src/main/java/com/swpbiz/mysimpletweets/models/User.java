@@ -1,4 +1,4 @@
-package com.codepath.apps.mysimpletweets.models;
+package com.swpbiz.mysimpletweets.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,4 +1,4 @@
-package com.codepath.apps.mysimpletweets.models;
+package com.swpbiz.mysimpletweets.models;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
-package com.codepath.apps.mysimpletweets;
+package com.swpbiz.mysimpletweets;
 
 import android.content.Context;
 
-import com.codepath.apps.mysimpletweets.models.Tweet;
+import com.swpbiz.mysimpletweets.models.Tweet;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
