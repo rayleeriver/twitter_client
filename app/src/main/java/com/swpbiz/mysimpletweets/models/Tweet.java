@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+
 @Table(name = "tweets")
 public class Tweet extends Model {
     // list out the attributes

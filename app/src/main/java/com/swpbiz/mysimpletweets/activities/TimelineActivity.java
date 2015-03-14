@@ -3,33 +3,40 @@ package com.swpbiz.mysimpletweets.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import com.swpbiz.mysimpletweets.R;
-import com.swpbiz.mysimpletweets.adapters.EndlessScrollListener;
-import com.swpbiz.mysimpletweets.adapters.TweetsArrayAdapter;
 import com.swpbiz.mysimpletweets.TwitterApplication;
 import com.swpbiz.mysimpletweets.TwitterClient;
+import com.swpbiz.mysimpletweets.adapters.EndlessScrollListener;
+import com.swpbiz.mysimpletweets.adapters.TweetsArrayAdapter;
 import com.swpbiz.mysimpletweets.models.Tweet;
 import com.swpbiz.mysimpletweets.models.User;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
+import org.apache.http.client.HttpResponseException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.inject.Inject;
+
 public class TimelineActivity extends ActionBarActivity {
+
+    Bus eventBus = new Bus();
 
     private TwitterClient client;
     private TweetsArrayAdapter tweetsAdapter;
@@ -44,6 +51,8 @@ public class TimelineActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        eventBus.register(this);
+
         setContentView(R.layout.activity_timeline);
 
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
@@ -59,6 +68,7 @@ public class TimelineActivity extends ActionBarActivity {
         lvTweets = (ListView) findViewById(R.id.lvTweets);
         lvTweets.setAdapter(tweetsAdapter);
         tweetsAdapter.clear();
+        Tweet.lastLowestId = Long.MAX_VALUE;
 
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
@@ -80,7 +90,6 @@ public class TimelineActivity extends ActionBarActivity {
     // send an api request to get the timeline json
     // fill the listiew by creating the tweet objects from json
     private void populateTimeline() {
-        Tweet.lastLowestId = Long.MAX_VALUE;
 
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
@@ -89,23 +98,30 @@ public class TimelineActivity extends ActionBarActivity {
                 // 1. deserialize json,
                 // 2. create models, add them to the adapter
                 // 3. load the model data into the listview
-                tweetsAdapter.addAll(Tweet.fromJsonArray(json));
+                eventBus.post(new TweetsFetchedEvent(json));
                 swipeContainer.setRefreshing(false);
-
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                if (throwable instanceof IOException) {
+                if (throwable instanceof HttpResponseException) {
+                    // Called API server too many times
+                    Toast.makeText(TimelineActivity.this, errorResponse.toString(), Toast.LENGTH_SHORT).show();
+                } else if (throwable instanceof IOException) {
                     // network error, load from local DB
                     tweetsAdapter.clear();
                     tweetsAdapter.addAll(Tweet.getAll());
                 } else {
-                    Toast.makeText(TimelineActivity.this, errorResponse.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(TimelineActivity.this, errorResponse.toString(), Toast.LENGTH_SHORT).show();
                 }
                 swipeContainer.setRefreshing(false);
             }
         });
+    }
+
+    @Subscribe
+    public void onTweetsFetched(TweetsFetchedEvent event) {
+        tweetsAdapter.addAll(event.getFetchedTweets());
     }
 
     public void getUserProfile() {
