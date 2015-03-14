@@ -1,4 +1,4 @@
-package com.swpbiz.mysimpletweets.activities;
+package com.swpbiz.mysimpletweets.events;
 
 import com.swpbiz.mysimpletweets.models.Tweet;
 

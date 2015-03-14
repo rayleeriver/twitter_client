@@ -21,6 +21,7 @@ import com.swpbiz.mysimpletweets.TwitterApplication;
 import com.swpbiz.mysimpletweets.TwitterClient;
 import com.swpbiz.mysimpletweets.adapters.EndlessScrollListener;
 import com.swpbiz.mysimpletweets.adapters.TweetsArrayAdapter;
+import com.swpbiz.mysimpletweets.events.TweetsFetchedEvent;
 import com.swpbiz.mysimpletweets.models.Tweet;
 import com.swpbiz.mysimpletweets.models.User;
 
@@ -31,8 +32,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 public class TimelineActivity extends ActionBarActivity {
 
@@ -59,7 +58,7 @@ public class TimelineActivity extends ActionBarActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                populateTimeline();
+                populateTimeline(false);
             }
         });
 
@@ -68,18 +67,17 @@ public class TimelineActivity extends ActionBarActivity {
         lvTweets = (ListView) findViewById(R.id.lvTweets);
         lvTweets.setAdapter(tweetsAdapter);
         tweetsAdapter.clear();
-        Tweet.lastLowestId = Long.MAX_VALUE;
 
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                populateTimeline();
+                populateTimeline(false);
             }
         });
 
         client = TwitterApplication.getRestClient();  // singleton client
         getUserProfile();
-        populateTimeline();
+        populateTimeline(true);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
@@ -89,7 +87,8 @@ public class TimelineActivity extends ActionBarActivity {
 
     // send an api request to get the timeline json
     // fill the listiew by creating the tweet objects from json
-    private void populateTimeline() {
+    private void populateTimeline(boolean reset) {
+        if (reset) Tweet.lastLowestId = Long.MAX_VALUE;
 
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
@@ -164,6 +163,8 @@ public class TimelineActivity extends ActionBarActivity {
                 Toast.makeText(this, "Can't detect current user, network issue?", Toast.LENGTH_LONG).show();
                 return false;
             }
+        } else if (id == R.id.action_profile) {
+            Toast.makeText(this, "profile button touched", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -183,9 +184,15 @@ public class TimelineActivity extends ActionBarActivity {
                 boolean success = data.getBooleanExtra("success", false);
                 if (success) {
                     tweetsAdapter.clear();
-                    populateTimeline();
+                    populateTimeline(true);
                 }
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+        super.onBackPressed();
     }
 }
