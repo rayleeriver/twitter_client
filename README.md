@@ -1,5 +1,34 @@
 <h1>Simple Twitter Client</h1>
 
+<p>Week 4</p>
+<p>Time taken:  4 hours</p>
+<p>Licecap video in file <a href="https://github.com/rayleeriver/twitter_client/blob/master/submission_w4.gif">submission_w4.gif</a></p>
+
+<p>The following stories have been implemented</p>
+
+<ul>
+    <li>User can switch between Timeline and Mention views using tabs.
+        <ul>
+            <li>User can view their home timeline tweets.</li>
+            <li>User can view the recent mentions of their username.</li>
+        </ul>
+    </li>
+    <li>User can navigate to view their own profile
+        <ul>
+            <li>User can see picture, tagline, # of followers, # of following, and tweets on their profile.</li>
+        </ul>
+    </li>
+    <li>User can click on the profile image in any tweet to see another user's profile.
+        <ul>
+            <li>User can see picture, tagline, # of followers, # of following, and tweets of clicked user.</li>
+            <li>Profile view should include that user's timeline</li>
+            <li>Optional: User can view following / followers list through the profile</li>
+        </ul>
+    </li>
+    <li>User can infinitely paginate any of these timelines (home, mentions, user) by scrolling to the bottom</li>
+</ul>
+
+<p>Week 3</p>
 <p>Time taken:  10 hours</p>
 <p>Licecap video in file <a href="https://github.com/rayleeriver/twitter_client/blob/master/submission_w3.gif">submission_w3.gif</a></p>
 
