@@ -34,16 +34,20 @@ public class TwitterClient extends OAuthBaseClient {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }
 
-    //    GET profile
-//    https://api.twitter.com/1.1/account/verify_credentials.json
-    public void getUserProfile(AsyncHttpResponseHandler handler) {
+    public void getUserTimeLine(String screenName, AsyncHttpResponseHandler jsonHttpResponseHandler) {
+        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 10);
+        params.put("screen_name", screenName);
+        client.get(apiUrl, params, jsonHttpResponseHandler);
+    }
+
+    public void getUserProfile(AsyncHttpResponseHandler jsonHttpResponseHandler) {
         String apiUrl = getApiUrl("account/verify_credentials.json");
-        client.get(apiUrl, null, handler);
+        client.get(apiUrl, null, jsonHttpResponseHandler);
     }
 
 
-    // each method is an endpoint
-    // HomeTimeLine - get home timeline
     public void getHomeTimeline(AsyncHttpResponseHandler jsonHttpResponseHandler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
@@ -54,20 +58,13 @@ public class TwitterClient extends OAuthBaseClient {
         client.get(apiUrl, params, jsonHttpResponseHandler);
     }
 
-//    https://api.twitter.com/1.1/statuses/mentions_timeline.json
     public void getMentionsTimeline(JsonHttpResponseHandler jsonHttpResponseHandler) {
         String apiUrl = getApiUrl("statuses/mentions_timeline.json");
         RequestParams params = new RequestParams();
         params.put("count", 10);
-        if (Tweet.lastLowestId != Long.MAX_VALUE) {
-            params.put("max_id", Tweet.lastLowestId);
-        }
         client.get(apiUrl, params, jsonHttpResponseHandler);
     }
 
-
-    // ComposeTweet.....
-//    https://api.twitter.com/1.1/statuses/update.json
     public void tweet(String body, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/update.json");
         RequestParams params = new RequestParams();
