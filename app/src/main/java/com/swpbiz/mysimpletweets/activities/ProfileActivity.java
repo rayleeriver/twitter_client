@@ -1,8 +1,11 @@
 package com.swpbiz.mysimpletweets.activities;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -10,10 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.swpbiz.mysimpletweets.R;
 import com.swpbiz.mysimpletweets.TwitterApplication;
 import com.swpbiz.mysimpletweets.TwitterClient;
@@ -81,6 +86,8 @@ public class ProfileActivity extends ActionBarActivity {
         TextView tvFollowers = (TextView) findViewById(R.id.tvFollowers);
         TextView tvFollowing = (TextView) findViewById(R.id.tvFollowings);
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
+//        ImageView ivUserHeaderBackground = (ImageView) findViewById(R.id.ivUserHeaderBackground);
+        final RelativeLayout rlProfile = (RelativeLayout) findViewById(R.id.rlUserHeader);
 
         tvName.setText(user.getName());
         tvScreenName.setText("@" +user.getScreenName());
@@ -88,5 +95,6 @@ public class ProfileActivity extends ActionBarActivity {
         tvFollowers.setText(user.getFollowersCount() + " Follower");
         tvFollowing.setText(user.getFriendsCount() + " Following");
         Picasso.with(this).load(user.getProfileImageUrl()).into(ivProfileImage);
+//        Picasso.with(this).load(user.getProfileBackgroundImageUrl()).centerCrop().fit().into(ivUserHeaderBackground);
     }
 }
