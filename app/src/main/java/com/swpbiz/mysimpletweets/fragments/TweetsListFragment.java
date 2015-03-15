@@ -14,6 +14,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.swpbiz.mysimpletweets.R;
 import com.swpbiz.mysimpletweets.TwitterApplication;
 import com.swpbiz.mysimpletweets.TwitterClient;
+import com.swpbiz.mysimpletweets.adapters.EndlessScrollListener;
 import com.swpbiz.mysimpletweets.adapters.TweetsArrayAdapter;
 import com.swpbiz.mysimpletweets.models.Tweet;
 
@@ -37,6 +38,12 @@ public abstract class TweetsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tweets_list, container, false);
         lvTweets = (ListView) v.findViewById(R.id.lvTweets);
+        lvTweets.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                populateTimeline(page==0?true:false);
+            }
+        });
         lvTweets.setAdapter(tweetsAdapter);
         tweetsAdapter.clear();
 

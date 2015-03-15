@@ -29,9 +29,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class TimelineActivity extends ActionBarActivity {
-    private static final int REQUEST_CODE = 2000;
+    public static final int REQUEST_CODE = 2000;
     private TwitterClient client;
     private User loggedInUser;
+    private HomeTimelineFragment homeTimelineFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,8 @@ public class TimelineActivity extends ActionBarActivity {
 
         // attac tabstrip to viewpager
         tabStrip.setViewPager(viewPager);
+
+        homeTimelineFragment = new HomeTimelineFragment();
     }
 
     private void setupActionBar() {
@@ -113,20 +116,19 @@ public class TimelineActivity extends ActionBarActivity {
         intent.putExtra("user", loggedInUser);
         startActivityForResult(intent, REQUEST_CODE);
     }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == REQUEST_CODE) {
-//            Log.d("debug", "onActivityResult");
-//            if (data != null) {
-//                boolean success = data.getBooleanExtra("success", false);
-//                if (success) {
-//                    tweetsAdapter.clear();
-//                    populateTimeline(true);
-//                }
-//            }
-//        }
-//    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            Log.d("debug", "onActivityResult");
+            if (data != null) {
+                boolean success = data.getBooleanExtra("success", false);
+                if (success) {
+                    homeTimelineFragment.reload();
+                }
+            }
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -135,7 +137,7 @@ public class TimelineActivity extends ActionBarActivity {
     }
 
     public class TweetsPagerAdapter extends FragmentPagerAdapter {
-        final int PAGE_COUNT=2;
+        final int PAGE_COUNT = 2;
         private String tabTitles[] = {"Home", "Mentions"};
 
         public TweetsPagerAdapter(FragmentManager fm) {
@@ -145,7 +147,7 @@ public class TimelineActivity extends ActionBarActivity {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new HomeTimelineFragment();
+                return homeTimelineFragment;
             } else if (position == 1) {
                 return new MentionsTimelineFragment();
             } else {
