@@ -1,37 +1,77 @@
 package com.swpbiz.mysimpletweets.activities;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 import com.swpbiz.mysimpletweets.R;
+import com.swpbiz.mysimpletweets.TwitterApplication;
 import com.swpbiz.mysimpletweets.TwitterClient;
 import com.swpbiz.mysimpletweets.fragments.UserTimelineFragment;
 import com.swpbiz.mysimpletweets.models.User;
 
+import org.apache.http.Header;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 public class ProfileActivity extends ActionBarActivity {
     TwitterClient client;
-    User loggedInUser;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-        loggedInUser = getIntent().getParcelableExtra("loggedInUser");
-        populateProfileHeader(loggedInUser);
+        client = TwitterApplication.getRestClient();
 
         String screenName = getIntent().getStringExtra("screen_name");
+        user = getIntent().getParcelableExtra("user");
+        if (user != null) {
+            populateProfileHeader(user);
+        } else {
+            if (screenName != null) {
+                client.getUsersShow(screenName, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        populateProfileHeader(User.fromJson(response));
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        if (throwable instanceof IOException) {
+                        } else {
+                            Log.d("debug", errorResponse.toString());
+                        }
+                    }
+                });
+            }
+        }
+
         if (savedInstanceState == null) {
             UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
             android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.flContainer, userTimelineFragment);
             ft.commit();
         }
+
+        setupActionBar();
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable((Color.parseColor("#55acee"))));
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void populateProfileHeader(User user) {
@@ -46,27 +86,5 @@ public class ProfileActivity extends ActionBarActivity {
         tvFollowers.setText(user.getFollowersCount() + " Follower");
         tvFollowing.setText(user.getFriendsCount() + " Following");
         Picasso.with(this).load(user.getProfileImageUrl()).into(ivProfileImage);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_profile, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

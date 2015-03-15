@@ -41,7 +41,7 @@ public class ComposeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
-        loggedInUser = getIntent().getParcelableExtra("loggedInUser");
+        loggedInUser = getIntent().getParcelableExtra("user");
 
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
         TextView tvUsername = (TextView) findViewById(R.id.tvUsername);
@@ -80,7 +80,6 @@ public class ComposeActivity extends ActionBarActivity {
         actionBar.setBackgroundDrawable(new ColorDrawable((Color.parseColor("#55acee"))));
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setIcon(R.drawable.ic_tweeter);
         actionBar.setCustomView(v);
 
         tvCharsLeft = (TextView) findViewById(R.id.tvCharsLeft);

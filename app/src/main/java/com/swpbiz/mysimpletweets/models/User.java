@@ -97,6 +97,9 @@ public class User extends Model implements Parcelable {
         dest.writeLong(uid);
         dest.writeString(screenName);
         dest.writeString(profileImageUrl);
+        dest.writeString(tagLine);
+        dest.writeString(followersCount);
+        dest.writeString(friendsCount);
     }
 
     public static final Creator<User> CREATOR = new Parcelable.Creator<User>() {
@@ -117,6 +120,9 @@ public class User extends Model implements Parcelable {
         uid = in.readLong();
         screenName = in.readString();
         profileImageUrl = in.readString();
+        tagLine = in.readString();
+        followersCount = in.readString();
+        friendsCount = in.readString();
     }
 
 }

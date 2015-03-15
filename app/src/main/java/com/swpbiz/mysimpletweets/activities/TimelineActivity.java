@@ -104,13 +104,13 @@ public class TimelineActivity extends ActionBarActivity {
 
     private void showProfileDialog() {
         Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("loggedInUser", loggedInUser);
-        startActivity(intent);
+        intent.putExtra("user", loggedInUser);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     private void showComposeDialog() {
         Intent intent = new Intent(this, ComposeActivity.class);
-        intent.putExtra("loggedInUser", loggedInUser);
+        intent.putExtra("user", loggedInUser);
         startActivityForResult(intent, REQUEST_CODE);
     }
 //

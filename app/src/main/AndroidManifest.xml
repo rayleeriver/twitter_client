@@ -60,11 +60,13 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.swpbiz.mysimpletweets.activities.TimelineActivity" />
->
         </activity>
         <activity
             android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.swpbiz.mysimpletweets.activities.TimelineActivity" />
         </activity>
     </application>
 

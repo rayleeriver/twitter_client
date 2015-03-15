@@ -1,6 +1,7 @@
 package com.swpbiz.mysimpletweets.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.swpbiz.mysimpletweets.R;
+import com.swpbiz.mysimpletweets.activities.ProfileActivity;
 import com.swpbiz.mysimpletweets.models.Tweet;
 import com.squareup.picasso.Picasso;
 
@@ -32,7 +34,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // get the tweet
-        Tweet tweet = getItem(position);
+        final Tweet tweet = getItem(position);
 
         // find or inflate the template
         ViewHolder viewHolder;
@@ -52,6 +54,14 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(viewHolder.ivProfileImage);
+        viewHolder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                intent.putExtra("screen_name", tweet.getUser().getScreenName());
+                getContext().startActivity(intent);
+            }
+        });
         viewHolder.tvScreenName.setText("@" + tweet.getUser().getScreenName());
         viewHolder.tvUsername.setText(tweet.getUser().getName());
         viewHolder.tvTimeSpan.setText(tweet.getCreatedAtTimeSpan());
