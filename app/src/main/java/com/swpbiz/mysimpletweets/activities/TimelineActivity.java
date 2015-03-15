@@ -53,14 +53,17 @@ public class TimelineActivity extends ActionBarActivity {
         eventBus.register(this);
 
         setContentView(R.layout.activity_timeline);
+        client = TwitterApplication.getRestClient();  // singleton client
 
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                populateTimeline(false);
-            }
-        });
+//        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                populateTimeline(false);
+//            }
+//        });
+
+        populateTimeline(false);
 
         tweets = new ArrayList<Tweet>();
         tweetsAdapter = new TweetsArrayAdapter(this, tweets);
@@ -68,14 +71,13 @@ public class TimelineActivity extends ActionBarActivity {
         lvTweets.setAdapter(tweetsAdapter);
         tweetsAdapter.clear();
 
-        lvTweets.setOnScrollListener(new EndlessScrollListener() {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                populateTimeline(false);
-            }
-        });
+//        lvTweets.setOnScrollListener(new EndlessScrollListener() {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount) {
+//                populateTimeline(false);
+//            }
+//        });
 
-        client = TwitterApplication.getRestClient();  // singleton client
         getUserProfile();
         populateTimeline(true);
 
@@ -98,7 +100,7 @@ public class TimelineActivity extends ActionBarActivity {
                 // 2. create models, add them to the adapter
                 // 3. load the model data into the listview
                 eventBus.post(new TweetsFetchedEvent(json));
-                swipeContainer.setRefreshing(false);
+//                swipeContainer.setRefreshing(false);
             }
 
             @Override
@@ -113,7 +115,7 @@ public class TimelineActivity extends ActionBarActivity {
                 } else {
                     Toast.makeText(TimelineActivity.this, errorResponse.toString(), Toast.LENGTH_SHORT).show();
                 }
-                swipeContainer.setRefreshing(false);
+//                swipeContainer.setRefreshing(false);
             }
         });
     }
