@@ -31,7 +31,7 @@ import org.json.JSONObject;
 public class ComposeActivity extends ActionBarActivity {
 
     private TwitterClient client;
-    private User currentUser;
+    private User loggedInUser;
     private EditText etBody;
     private TextView tvCharsLeft;
 
@@ -41,7 +41,7 @@ public class ComposeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
-        currentUser = getIntent().getParcelableExtra("currentUser");
+        loggedInUser = getIntent().getParcelableExtra("loggedInUser");
 
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
         TextView tvUsername = (TextView) findViewById(R.id.tvUsername);
@@ -64,9 +64,9 @@ public class ComposeActivity extends ActionBarActivity {
             }
         });
 
-        Picasso.with(this).load(currentUser.getProfileImageUrl()).into(ivProfileImage);
-        tvUsername.setText(currentUser.getName());
-        tvScreenName.setText("@" + currentUser.getScreenName());
+        Picasso.with(this).load(loggedInUser.getProfileImageUrl()).into(ivProfileImage);
+        tvUsername.setText(loggedInUser.getName());
+        tvScreenName.setText("@" + loggedInUser.getScreenName());
 
         setupActionBar();
 

@@ -1,6 +1,5 @@
 package com.swpbiz.mysimpletweets.activities;
 
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -8,35 +7,23 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 import com.swpbiz.mysimpletweets.R;
-import com.swpbiz.mysimpletweets.TwitterApplication;
 import com.swpbiz.mysimpletweets.TwitterClient;
 import com.swpbiz.mysimpletweets.fragments.UserTimelineFragment;
 import com.swpbiz.mysimpletweets.models.User;
 
-import org.apache.http.Header;
-import org.json.JSONObject;
-
 public class ProfileActivity extends ActionBarActivity {
     TwitterClient client;
-    User user;
+    User loggedInUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        client = TwitterApplication.getRestClient();
-        client.getUserProfile(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                user = User.fromJson(response);
-                getSupportActionBar().setTitle("@" + user.getScreenName());
-                populateProfileHeader(user);
-            }
-        });
+        loggedInUser = getIntent().getParcelableExtra("loggedInUser");
+        populateProfileHeader(loggedInUser);
 
         String screenName = getIntent().getStringExtra("screen_name");
         if (savedInstanceState == null) {
