@@ -117,7 +117,7 @@ public class ComposeActivity extends ActionBarActivity {
                 // TODO:  Handle response code
                 Intent i = new Intent();
                 i.putExtra("success", true);
-                setResult(TimelineActivity.REQUEST_CODE, i);
+//                setResult(TimelineActivity.REQUEST_CODE, i);
                 finish();
             }
 

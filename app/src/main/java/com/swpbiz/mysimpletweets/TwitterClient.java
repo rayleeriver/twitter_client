@@ -2,6 +2,7 @@ package com.swpbiz.mysimpletweets;
 
 import android.content.Context;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.swpbiz.mysimpletweets.models.Tweet;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -43,14 +44,25 @@ public class TwitterClient extends OAuthBaseClient {
 
     // each method is an endpoint
     // HomeTimeLine - get home timeline
-    public void getHomeTimeline(AsyncHttpResponseHandler handler) {
+    public void getHomeTimeline(AsyncHttpResponseHandler jsonHttpResponseHandler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         RequestParams params = new RequestParams();
         params.put("count", 10);
         if (Tweet.lastLowestId != Long.MAX_VALUE) {
             params.put("max_id", Tweet.lastLowestId);
         }
-        client.get(apiUrl, params, handler);
+        client.get(apiUrl, params, jsonHttpResponseHandler);
+    }
+
+//    https://api.twitter.com/1.1/statuses/mentions_timeline.json
+    public void getMentionsTimeline(JsonHttpResponseHandler jsonHttpResponseHandler) {
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 10);
+        if (Tweet.lastLowestId != Long.MAX_VALUE) {
+            params.put("max_id", Tweet.lastLowestId);
+        }
+        client.get(apiUrl, params, jsonHttpResponseHandler);
     }
 
 
