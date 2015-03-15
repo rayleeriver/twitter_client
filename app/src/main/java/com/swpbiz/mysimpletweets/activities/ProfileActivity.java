@@ -75,13 +75,15 @@ public class ProfileActivity extends ActionBarActivity {
     }
 
     private void populateProfileHeader(User user) {
-        TextView tvName = (TextView) findViewById(R.id.tvName);
+        TextView tvName = (TextView) findViewById(R.id.tvUsername);
+        TextView tvScreenName = (TextView) findViewById(R.id.tvScreenName);
         TextView tvTagLine = (TextView) findViewById(R.id.tvTagLine);
         TextView tvFollowers = (TextView) findViewById(R.id.tvFollowers);
         TextView tvFollowing = (TextView) findViewById(R.id.tvFollowings);
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
 
         tvName.setText(user.getName());
+        tvScreenName.setText("@" +user.getScreenName());
         tvTagLine.setText((user.getTagLine()));
         tvFollowers.setText(user.getFollowersCount() + " Follower");
         tvFollowing.setText(user.getFriendsCount() + " Following");
